@@ -50,34 +50,33 @@ class DrawingComponent extends React.PureComponent {
     this.refs.canvas.addEventListener("mousemove", this.eventTrigger, false);
     this.refs.canvas.addEventListener("mousedown", this.eventTrigger, false);
     this.refs.canvas.addEventListener("mouseup", this.eventTrigger, false);
+    this.getDataFromDB();
+  }
+  getDataFromDB = () => {
     axios
       .get("image/init")
       .then(res => {
-        this.setState({ totalClick: res.data.Click });
-        // let yImg = new Image();
-        // yImg.src = res.data.Image;
-        // yImg.onload = () => {
-        //   this.refs.canvas.getContext("2d").drawImage(yImg, 0, 0);
-        // };
-        //////////////////above loading the previous pict which is not editable////////////////////
-        //////////////////below loading the previous pict which is  editable////////////////////
-        this.record = res.data.Track;
-        this.resetImage();
-        this.setState({
-          saveSuccess: true,
-          openSnackBar: true,
-          snackBarMsg: "Loading successfully"
-        });
+        if (res.data === "Welcome") {
+          this.snackerBarHandle("Welcome", true);
+        } else {
+          this.setState({ totalClick: res.data.Click });
+          // let yImg = new Image();
+          // yImg.src = res.data.Image;
+          // yImg.onload = () => {
+          //   this.refs.canvas.getContext("2d").drawImage(yImg, 0, 0);
+          // };
+          //////////////////above loading the previous pict which is not editable////////////////////
+          //////////////////below loading the previous pict which is  editable////////////////////
+          this.record = res.data.Track;
+          this.resetImage();
+          this.snackerBarHandle("Loading successfully", true);
+        }
       })
       .catch(e => {
-        this.setState({
-          saveSuccess: false,
-          openSnackBar: true,
-          snackBarMsg: "Loading failed"
-        });
+        this.snackerBarHandle("Loading successfully");
         console.error(e);
       });
-  }
+  };
 
   eventTrigger = e => {
     this.findxy(e);
@@ -228,19 +227,9 @@ class DrawingComponent extends React.PureComponent {
         track: this.record
       })
       .then(res => {
-        this.setState({
-          saveSuccess: true,
-          openSnackBar: true,
-          snackBarMsg: "Save successfully"
-        });
+        this.snackerBarHandle("Save successfully", true);
       })
-      .catch(e =>
-        this.setState({
-          saveSuccess: false,
-          openSnackBar: true,
-          snackBarMsg: "Save failed"
-        })
-      );
+      .catch(e => this.snackerBarHandle("Save failed"));
   };
 
   clearImg = undo => {
@@ -256,6 +245,30 @@ class DrawingComponent extends React.PureComponent {
       openSnackBar: false
     });
   };
+  snackerBarHandle = (msg, success) => {
+    success
+      ? this.setState({
+          saveSuccess: true,
+          openSnackBar: true,
+          snackBarMsg: msg
+        })
+      : this.setState({
+          saveSuccess: false,
+          openSnackBar: true,
+          snackBarMsg: msg
+        });
+  };
+  resetAll = () => {
+    this.clearImg();
+    //this.setState({  totalClick: 0});
+    axios
+      .delete("image/delete")
+      .then(r => {
+        this.setState({ totalClick: 0, currClick: 0 });
+        this.snackerBarHandle("Reset successfully", true);
+      })
+      .catch(r => this.snackerBarHandle("Reset failed"));
+  };
   render() {
     return (
       <React.Fragment>
@@ -266,6 +279,7 @@ class DrawingComponent extends React.PureComponent {
         >
           <div id="tools">
             <span>Current click : {this.state.currClick}</span>
+
             <span> Total click : {this.state.totalClick}</span>
             <div id="color-tools">
               <div id="selectColor">Choose Color</div>
@@ -294,12 +308,15 @@ class DrawingComponent extends React.PureComponent {
               Reset
             </Button>
           </div>
+          <Button href="#text-buttons" onClick={this.resetAll}>
+            Reset ALL
+          </Button>
         </div>
         <SnackBar
           openSnackBar={this.state.openSnackBar}
           success={this.state.saveSuccess}
           closeSnackBar={this.closeSnackBar}
-          message="Save"
+          message={this.state.snackBarMsg}
         />
       </React.Fragment>
     );

@@ -13,7 +13,16 @@ router.put("/save", async (req, res) => {
 router.get("/init", (req, res) => {
   Image.find({})
     .then(result => {
-      res.send(result[0]);
+      res.send(result.length === 0 ? "Welcome" : result[0]);
+    })
+    .catch(() => {
+      res.sendStatus(500);
+    });
+});
+router.delete("/delete", (req, res) => {
+  Image.deleteMany({})
+    .then(result => {
+      res.send(result);
     })
     .catch(() => {
       res.sendStatus(500);
