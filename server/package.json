@@ -1,0 +1,49 @@
+{
+  "name": "server",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./dist/app.js",
+  "scripts": {
+    "build:dev": "cross-env NODE_ENV=development webpack --mode development --config webpack.dev.config.js",
+    "start": "cross-env NODE_ENV=development nodemon ./app.js",
+    "dev": "cross-env NODE_ENV=development nodemon ./dist/main.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.3",
+    "cors": "^2.8.5",
+    "cross-env": "^5.2.0",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1",
+    "express-winston": "^3.2.0",
+    "helmet": "^3.15.1",
+    "moment": "^2.24.0",
+    "mongoose": "^5.6.0",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.19.1",
+    "winston-loggly-bulk": "^3.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.3.4",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.5",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "clean-webpack-plugin": "^2.0.0",
+    "cross-env": "^5.2.0",
+    "eslint": "^5.15.1",
+    "eslint-loader": "^2.1.2",
+    "mocha": "^6.0.2",
+    "nodemon": "^1.18.10",
+    "pre-commit": "^1.2.2",
+    "rewire": "^4.0.1",
+    "sinon": "^7.2.7",
+    "sinon-chai": "^3.3.0",
+    "uglifyjs-webpack-plugin": "^2.1.2",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3",
+    "webpack-node-externals": "^1.7.2"
+  }
+}

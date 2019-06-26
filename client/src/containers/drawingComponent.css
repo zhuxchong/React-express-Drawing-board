@@ -1,0 +1,23 @@
+#app-detail {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+#canvas {
+  width: 1000px;
+  height: 500px;
+  margin: 10px auto;
+  border: 2px solid;
+}
+#tools {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+#color-tools {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
