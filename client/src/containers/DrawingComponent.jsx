@@ -30,7 +30,8 @@ class DrawingComponent extends React.PureComponent {
       refresh: 0,
       currClick: 0,
       totalClick: 0,
-      openSnackBar: false
+      openSnackBar: false,
+      snackBarMsg: ""
     };
   }
 
@@ -62,8 +63,20 @@ class DrawingComponent extends React.PureComponent {
         //////////////////below loading the previous pict which is  editable////////////////////
         this.record = res.data.Track;
         this.resetImage();
+        this.setState({
+          saveSuccess: true,
+          openSnackBar: true,
+          snackBarMsg: "Loading successfully"
+        });
       })
-      .catch(e => console.log(e));
+      .catch(e => {
+        this.setState({
+          saveSuccess: false,
+          openSnackBar: true,
+          snackBarMsg: "Loading failed"
+        });
+        console.error(e);
+      });
   }
 
   eventTrigger = e => {
@@ -190,7 +203,7 @@ class DrawingComponent extends React.PureComponent {
   };
   resetImage = () => {
     this.record.map((recordItem, index) => {
-      recordItem.map(i => {
+      return recordItem.map(i => {
         if (i.dot) {
           this.pointdraw(i.currX, i.currY, i.color, i.width);
           return null;
@@ -215,9 +228,19 @@ class DrawingComponent extends React.PureComponent {
         track: this.record
       })
       .then(res => {
-        this.setState({ saveSuccess: true, openSnackBar: true });
+        this.setState({
+          saveSuccess: true,
+          openSnackBar: true,
+          snackBarMsg: "Save successfully"
+        });
       })
-      .catch(e => this.setState({ saveSuccess: false, openSnackBar: true }));
+      .catch(e =>
+        this.setState({
+          saveSuccess: false,
+          openSnackBar: true,
+          snackBarMsg: "Save failed"
+        })
+      );
   };
 
   clearImg = undo => {
@@ -276,6 +299,7 @@ class DrawingComponent extends React.PureComponent {
           openSnackBar={this.state.openSnackBar}
           success={this.state.saveSuccess}
           closeSnackBar={this.closeSnackBar}
+          message="Save"
         />
       </React.Fragment>
     );

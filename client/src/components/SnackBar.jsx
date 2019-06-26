@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import Button from "@material-ui/core/Button";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ErrorIcon from "@material-ui/icons/Error";
 import InfoIcon from "@material-ui/icons/Info";
@@ -98,13 +97,13 @@ export default function CustomizedSnackbars(props) {
           <MySnackbarContentWrapper
             onClose={props.closeSnackBar}
             variant="success"
-            message="Save successfully!"
+            message={`${props.message}`}
           />
         ) : (
           <MySnackbarContentWrapper
             onClose={props.closeSnackBar}
             variant="error"
-            message="Something error!"
+            message={`${props.message}`}
           />
         )}
       </Snackbar>
