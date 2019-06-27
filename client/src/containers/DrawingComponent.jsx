@@ -243,11 +243,7 @@ class DrawingComponent extends React.PureComponent {
       .getContext("2d")
       .clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height);
   };
-  closeSnackBar = () => {
-    this.setState({
-      openSnackBar: false
-    });
-  };
+
   loadingHandle = (open, msg) => {
     this.setState({
       loading: open,
@@ -315,13 +311,9 @@ class DrawingComponent extends React.PureComponent {
               undo
             </Button>
 
-            <Button href="#text-buttons" onClick={() => this.clearImg(false)}>
-              Reset
-            </Button>
+            <Button onClick={() => this.clearImg(false)}>Reset</Button>
           </div>
-          <Button href="#text-buttons" onClick={this.resetAll}>
-            Reset ALL
-          </Button>
+          <Button onClick={this.resetAll}>Reset ALL</Button>
         </div>
         {this.state.loading && (
           <div
@@ -339,7 +331,11 @@ class DrawingComponent extends React.PureComponent {
         <SnackBar
           openSnackBar={this.state.openSnackBar}
           success={this.state.saveSuccess}
-          closeSnackBar={this.closeSnackBar}
+          closeSnackBar={() => {
+            this.setState({
+              openSnackBar: false
+            });
+          }}
           message={this.state.snackBarMsg}
         />
       </React.Fragment>
