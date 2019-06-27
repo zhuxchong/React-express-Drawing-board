@@ -4,15 +4,14 @@ import ColorPicker from "../components/ColorPicker";
 import SnackBar from "../components/SnackBar";
 import "./drawingComponent.css";
 import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const colorArray = ["black", "red", "yellow", "blue"];
 class DrawingComponent extends React.PureComponent {
   constructor() {
     super();
     this.tempRecord = [];
-
     this.record = [];
-
     this.width = 2;
     this.color = "black";
     this.state = {
@@ -31,7 +30,9 @@ class DrawingComponent extends React.PureComponent {
       currClick: 0,
       totalClick: 0,
       openSnackBar: false,
-      snackBarMsg: ""
+      snackBarMsg: "",
+      loading: false,
+      loadingMsg: ""
     };
   }
 
@@ -53,6 +54,7 @@ class DrawingComponent extends React.PureComponent {
     this.getDataFromDB();
   }
   getDataFromDB = () => {
+    this.loadingHandle(true, "Loading");
     axios
       .get("image/init")
       .then(res => {
@@ -220,6 +222,7 @@ class DrawingComponent extends React.PureComponent {
   };
 
   save = () => {
+    this.loadingHandle(true, "Saving");
     axios
       .put("image/save", {
         image: this.refs.canvas.toDataURL(),
@@ -245,25 +248,33 @@ class DrawingComponent extends React.PureComponent {
       openSnackBar: false
     });
   };
+  loadingHandle = (open, msg) => {
+    this.setState({
+      loading: open,
+      loadingMsg: msg
+    });
+  };
   snackerBarHandle = (msg, success) => {
     success
       ? this.setState({
           saveSuccess: true,
           openSnackBar: true,
-          snackBarMsg: msg
+          snackBarMsg: msg,
+          loading: false
         })
       : this.setState({
           saveSuccess: false,
           openSnackBar: true,
-          snackBarMsg: msg
+          snackBarMsg: msg,
+          loading: false
         });
   };
   resetAll = () => {
-    this.clearImg();
-    //this.setState({  totalClick: 0});
+    this.loadingHandle(true, "Resetting");
     axios
       .delete("image/delete")
       .then(r => {
+        this.clearImg();
         this.setState({ totalClick: 0, currClick: 0 });
         this.snackerBarHandle("Reset successfully", true);
       })
@@ -312,6 +323,19 @@ class DrawingComponent extends React.PureComponent {
             Reset ALL
           </Button>
         </div>
+        {this.state.loading && (
+          <div
+            style={{
+              position: "fixed",
+              left: "50%",
+              top: "50%"
+            }}
+          >
+            <CircularProgress />
+            <span>{this.state.loadingMsg}...</span>
+          </div>
+        )}
+
         <SnackBar
           openSnackBar={this.state.openSnackBar}
           success={this.state.saveSuccess}
