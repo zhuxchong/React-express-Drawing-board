@@ -24,9 +24,9 @@ const ImageSchema = new Scheme({
 });
 function validateImage(obj) {
   const schema = {
-    Track: Joi.array().required(),
-    Image: Joi.string().required(),
-    Click: Joi.number().required()
+    track: Joi.array().required(),
+    image: Joi.string().required(),
+    click: Joi.number().required()
   };
   return Joi.validate(obj, schema);
 }

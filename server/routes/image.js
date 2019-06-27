@@ -5,6 +5,7 @@ const { updateImage } = require("../Repo/ImageRepo");
 
 router.put("/save", async (req, res) => {
   const { error } = validateImage(req.body);
+
   if (error) return res.status(400).send(error.details[0].message);
   if (await updateImage(req)) {
     res.sendStatus(200);

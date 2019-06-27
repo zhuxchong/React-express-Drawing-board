@@ -1,4 +1,4 @@
-const Image = require("../Model/Image");
+const { Image } = require("../Model/Image");
 
 async function updateImage(req) {
   const count = await Image.find({}).countDocuments();
